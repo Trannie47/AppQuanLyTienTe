@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../controllers/ProcessImage.dart';
 
-Widget ItemCategory({required Category category}) {
+Widget ItemCategory({
+  required Category category,
+  Function()? onEdit,
+  Function()? onDelete,
+}) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     padding: const EdgeInsets.all(12),
@@ -55,22 +59,33 @@ Widget ItemCategory({required Category category}) {
 
         /// INFO
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// NAME
-                Text(
-                  category.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                category.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
+
+        /// 🔥 ACTION BUTTONS
+        Row(
+          children: [
+            IconButton(
+              onPressed: onEdit,
+              icon: const Icon(Icons.edit, color: Colors.blue),
+            ),
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete, color: Colors.red),
+            ),
+          ],
         ),
       ],
     ),

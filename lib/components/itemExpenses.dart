@@ -86,11 +86,13 @@ Widget ItemExpenses({required Expense expense}) {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "- ${formatMoney(expense.amount)}",
-              style: const TextStyle(
+              "${formatMoney(expense.amount * (expense.category?.isIncome == true ? 1 : -1))} ",
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: expense.category?.isIncome == true
+                    ? Colors.green
+                    : Colors.red,
               ),
             ),
 

@@ -4,18 +4,20 @@ class Category {
   int stt;
   String name;
   String icon;
+  bool isIncome;
 
   /// Tạo mới (auto tăng stt)
-  Category({required this.name, required this.icon}) : stt = ++_counter;
+  Category({required this.name, required this.icon, this.isIncome = false})
+    : stt = ++_counter;
 
   /// Tạo từ JSON
   factory Category.fromJson(Map<String, dynamic> json) {
-    final category = Category(
+    final category = Category._internal(
+      stt: json['stt'] as int,
       name: json['name'] as String,
       icon: json['icon'] as String,
+      isIncome: json['isIncome'] as bool? ?? false,
     );
-
-    category.stt = json['stt'] as int;
 
     // cập nhật counter để không bị trùng
     if (category.stt > _counter) {
@@ -25,32 +27,31 @@ class Category {
     return category;
   }
 
+  /// Constructor nội bộ (không tăng counter)
+  Category._internal({
+    required this.stt,
+    required this.name,
+    required this.icon,
+    required this.isIncome,
+  });
+
   /// Convert sang JSON
   Map<String, dynamic> toJson() {
-    return {'stt': stt, 'name': name, 'icon': icon};
+    return {'stt': stt, 'name': name, 'icon': icon, 'isIncome': isIncome};
   }
 
   /// Copy dữ liệu
-  Category copyWith({int? stt, String? name, String? icon}) {
-    final newCategory = Category(
+  Category copyWith({int? stt, String? name, String? icon, bool? isIncome}) {
+    return Category._internal(
+      stt: stt ?? this.stt,
       name: name ?? this.name,
       icon: icon ?? this.icon,
+      isIncome: isIncome ?? this.isIncome,
     );
-
-    newCategory.stt = stt ?? this.stt;
-    return newCategory;
   }
 
   @override
   String toString() {
-    return 'Category(stt: $stt, name: $name, icon: $icon)';
+    return 'Category(stt: $stt, name: $name, icon: $icon, isIncome: $isIncome)';
   }
 }
-
-List<Category> categories = [
-  Category(name: "Food", icon: "food"),
-  Category(name: "Shopping", icon: "shopping"),
-  Category(name: "Transport", icon: "transport"),
-  Category(name: "Invest", icon: "invest"),
-  Category(name: "Phone", icon: "phone"),
-];
