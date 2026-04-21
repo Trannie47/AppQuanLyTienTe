@@ -37,27 +37,33 @@ class Expense {
     return '$date$seq';
   }
 
-  /// FROM JSON
+  /// FROM JSON (Supabase)
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
-      id: json['id'] as String,
+      id: json['id'].toString(),
       title: json['title'] as String,
       amount: (json['amount'] as num).toDouble(),
-      category: json['category'] != null
-          ? Category.fromJson(json['category'])
+
+      /// 👇 FIX: lấy từ join categories
+      category: json['categories'] != null
+          ? Category.fromJson(json['categories'])
           : null,
+
       date: DateTime.parse(json['date']),
       note: json['note'],
     );
   }
 
-  /// TO JSON
+  /// TO JSON (Supabase)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'title': title,
       'amount': amount,
-      'category': category?.toJson(),
+
+      /// 👇 FIX: gửi khóa ngoại
+      'category_stt': category?.stt,
+
       'date': date.toIso8601String(),
       'note': note,
     };

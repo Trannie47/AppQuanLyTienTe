@@ -1,10 +1,44 @@
-import 'package:dh52201610_luongthihuyentrang/controllers/formatController.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../controllers/ProcessImage.dart';
+import '../controllers/formatController.dart';
 import '../models/expense.dart';
 
 Widget ItemExpenses({required Expense expense}) {
+  final category = expense.category;
+  final categoryName = category?.name ?? "Other";
+  final isIncome = category?.isIncome == true;
+
+  Widget buildIcon() {
+    if (category?.icon == null || category!.icon!.isEmpty) {
+      return _buildTextIcon(categoryName);
+    }
+
+    if (category!.icon!.startsWith('assets')) {
+      return Image.asset(
+        category.icon!,
+        width: 24,
+        height: 24,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _buildTextIcon(categoryName),
+      );
+    }
+
+    final file = File(category.icon!);
+
+    if (file.existsSync()) {
+      return Image.file(
+        file,
+        width: 24,
+        height: 24,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _buildTextIcon(categoryName),
+      );
+    }
+
+    return _buildTextIcon(categoryName);
+  }
+
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     padding: const EdgeInsets.all(12),
@@ -21,29 +55,17 @@ Widget ItemExpenses({required Expense expense}) {
     ),
     child: Row(
       children: [
-        /// ICON CATEGORY
+        /// 🔥 ICON (GIỐNG CATEGORY)
         Container(
           width: 45,
           height: 45,
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors
+                .primaries[categoryName.hashCode % Colors.primaries.length]
+                .withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Center(
-            child:
-                (expense.category?.icon != null &&
-                    expense.category!.icon!.contains('assets'))
-                ? Image.asset(
-                    getImagePath(expense.category!.icon!),
-                    width: 24,
-                    height: 24,
-                    fit: BoxFit.cover,
-                  )
-                : Text(
-                    expense.category?.icon ?? "❓",
-                    style: const TextStyle(fontSize: 20),
-                  ),
-          ),
+          child: Center(child: buildIcon()),
         ),
 
         const SizedBox(width: 12),
@@ -53,7 +75,6 @@ Widget ItemExpenses({required Expense expense}) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// TITLE
               Text(
                 expense.title,
                 style: const TextStyle(
@@ -64,15 +85,13 @@ Widget ItemExpenses({required Expense expense}) {
 
               const SizedBox(height: 4),
 
-              /// CATEGORY
               Text(
-                expense.category?.name ?? "Other",
+                categoryName,
                 style: TextStyle(fontSize: 13, color: Colors.grey[600]),
               ),
 
               const SizedBox(height: 4),
 
-              /// DATE
               Text(
                 DateFormat('dd/MM/yyyy').format(expense.date),
                 style: TextStyle(fontSize: 12, color: Colors.grey[500]),
@@ -86,20 +105,17 @@ Widget ItemExpenses({required Expense expense}) {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "${formatMoney(expense.amount * (expense.category?.isIncome == true ? 1 : -1))} ",
+              formatMoney(expense.amount * (isIncome ? 1 : -1)),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: expense.category?.isIncome == true
-                    ? Colors.green
-                    : Colors.red,
+                color: isIncome ? Colors.green : Colors.red,
               ),
             ),
 
             const SizedBox(height: 4),
 
-            /// NOTE (optional)
-            if (expense.note != null)
+            if (expense.note != null && expense.note!.isNotEmpty)
               Text(
                 expense.note!,
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
@@ -108,5 +124,12 @@ Widget ItemExpenses({required Expense expense}) {
         ),
       ],
     ),
+  );
+}
+
+Widget _buildTextIcon(String name) {
+  return Text(
+    name.isNotEmpty ? name[0].toUpperCase() : "❓",
+    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
   );
 }

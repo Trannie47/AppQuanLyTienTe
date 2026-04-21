@@ -37,6 +37,10 @@ dependencies:
   intl: ^0.20.2
   image_picker: ^1.2.1
   shared_preferences: ^2.5.5
+  supabase_flutter: ^2.12.4
+  http: ^1.6.0
+  fl_chart: ^1.2.0
+  month_picker_dialog: ^6.7.2
 
 
 dev_dependencies:

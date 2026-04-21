@@ -10,16 +10,16 @@ class Category {
   Category({required this.name, required this.icon, this.isIncome = false})
     : stt = ++_counter;
 
-  /// Tạo từ JSON
+  /// Tạo từ JSON (Supabase)
   factory Category.fromJson(Map<String, dynamic> json) {
     final category = Category._internal(
       stt: json['stt'] as int,
       name: json['name'] as String,
       icon: json['icon'] as String,
-      isIncome: json['isIncome'] as bool? ?? false,
+      isIncome: json['is_income'] as bool? ?? false, // 👈 FIX
     );
 
-    // cập nhật counter để không bị trùng
+    // tránh trùng stt
     if (category.stt > _counter) {
       _counter = category.stt;
     }
@@ -27,7 +27,7 @@ class Category {
     return category;
   }
 
-  /// Constructor nội bộ (không tăng counter)
+  /// Constructor nội bộ (không auto tăng)
   Category._internal({
     required this.stt,
     required this.name,
@@ -35,9 +35,14 @@ class Category {
     required this.isIncome,
   });
 
-  /// Convert sang JSON
+  /// Convert sang JSON (Supabase)
   Map<String, dynamic> toJson() {
-    return {'stt': stt, 'name': name, 'icon': icon, 'isIncome': isIncome};
+    return {
+      'stt': stt,
+      'name': name,
+      'icon': icon,
+      'is_income': isIncome, // 👈 FIX
+    };
   }
 
   /// Copy dữ liệu
