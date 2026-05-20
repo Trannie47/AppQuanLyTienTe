@@ -4,16 +4,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import '../../models/chiphi.dart';
 
-class StatsPage extends StatefulWidget {
+class ThongKePage extends StatefulWidget {
   final List<ChiPhi> list;
 
-  const StatsPage({super.key, required this.list});
+  const ThongKePage({super.key, required this.list});
 
   @override
-  State<StatsPage> createState() => _StatsPageState();
+  State<ThongKePage> createState() => _ThongKePageState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _ThongKePageState extends State<ThongKePage> {
   DateTime selectedMonth = DateTime.now();
 
   /// null = tất cả | true = thu | false = chi

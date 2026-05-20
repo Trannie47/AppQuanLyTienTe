@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import '../../components/itemChiPhi.dart';
 import '../ExpenseFormPage/page.dart';
 
-class ListExpensePage extends StatefulWidget {
+class DsChiPhiPage extends StatefulWidget {
   final List<ChiPhi> list;
 
-  const ListExpensePage({super.key, required this.list});
+  const DsChiPhiPage({super.key, required this.list});
 
   @override
-  State<ListExpensePage> createState() => _ListExpensePageState();
+  State<DsChiPhiPage> createState() => _DsChiPhiPageState();
 }
 
-class _ListExpensePageState extends State<ListExpensePage> {
+class _DsChiPhiPageState extends State<DsChiPhiPage> {
   /// 🔥 dialog xác nhận xoá
   Future<void> _confirmDelete(int index) async {
     final result = await showDialog(

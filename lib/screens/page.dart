@@ -2,8 +2,8 @@ import 'package:dh52201610_luongthihuyentrang/controllers/chiPhiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import 'ExpenseFormPage/page.dart';
-import 'ListExpensePage/page.dart';
-import 'StatsPage/page.dart';
+import 'DsChiPhiPage/DsChiPhiPage.dart';
+import 'ThongKePage/ThongKePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,11 +67,11 @@ class _HomePageState extends State<HomePage> {
   Widget get currentScreen {
     switch (currentPage) {
       case 0:
-        return ListExpensePage(list: list);
+        return DsChiPhiPage(list: list);
       case 1:
-        return StatsPage(list: list);
+        return ThongKePage(list: list);
       default:
-        return ListExpensePage(list: list);
+        return DsChiPhiPage(list: list);
     }
   }
 
