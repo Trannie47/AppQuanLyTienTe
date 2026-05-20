@@ -3,32 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../models/loai.dart';
 
-class CategoryFormPage extends StatefulWidget {
+class LoaiForm extends StatefulWidget {
   final bool isIncome;
-  final Loai? category;
+  final Loai? loai;
 
-  const CategoryFormPage({super.key, required this.isIncome, this.category});
+  const LoaiForm({super.key, required this.isIncome, this.loai});
 
   @override
-  State<CategoryFormPage> createState() => _CategoryFormPageState();
+  State<LoaiForm> createState() => _LoaiFormState();
 }
 
-class _CategoryFormPageState extends State<CategoryFormPage> {
+class _LoaiFormState extends State<LoaiForm> {
   final _nameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? _image;
-  late Loai? _category;
+  late Loai? _loai;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.category != null) {
-      _category = widget.category!;
-      _nameController.text = widget.category!.ten;
+    if (widget.loai != null) {
+      _loai = widget.loai!;
+      _nameController.text = widget.loai!.ten;
 
-      if (widget.category!.icon.isNotEmpty) {
-        _image = File(widget.category!.icon);
+      if (widget.loai!.icon.isNotEmpty) {
+        _image = File(widget.loai!.icon);
       }
     }
   }
@@ -71,11 +71,11 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
   void _save() {
     if (_nameController.text.trim().isEmpty) return;
 
-    if (widget.category != null) {
+    if (widget.loai != null) {
       // Sửa danh mục
-      Loai updatedCategory = widget.category!.copyWith(
+      Loai updatedCategory = widget.loai!.copyWith(
         ten: _nameController.text.trim(),
-        icon: _image?.path ?? widget.category!.icon,
+        icon: _image?.path ?? widget.loai!.icon,
       );
       Navigator.pop(context, updatedCategory);
     } else {
@@ -94,7 +94,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.category == null ? "Thêm danh mục" : "Sửa danh mục"),
+        title: Text(widget.loai == null ? "Thêm danh mục" : "Sửa danh mục"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -128,7 +128,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _save,
-              child: Text(widget.category != null ? "Lưu" : "Thêm"),
+              child: Text(widget.loai != null ? "Lưu" : "Thêm"),
             ),
           ],
         ),

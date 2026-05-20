@@ -1,4 +1,4 @@
 class ShareKeys {
-  static final Categories = 'categories';
-  static final Expense = 'expense';
+  static final loais = 'loais';
+  static final chiphi = 'chiphi';
 }

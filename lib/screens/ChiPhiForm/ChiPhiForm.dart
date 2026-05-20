@@ -1,35 +1,35 @@
+import 'package:dh52201610_luongthihuyentrang/components/loaiDropdownItem.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../components/CategoryDropdownItem.dart';
 import '../../components/topSwitchTab.dart';
 import '../../controllers/loaiControler.dart';
 import '../../controllers/otherApi.dart';
 import '../../models/loai.dart';
-import 'ListCategory/page.dart';
+import 'DsLoai/DsLoai.dart';
 
-class ExpenseFormPage extends StatefulWidget {
+class ChiPhiForm extends StatefulWidget {
   final ChiPhi? expense;
 
-  const ExpenseFormPage({super.key, this.expense});
+  const ChiPhiForm({super.key, this.expense});
 
   @override
-  State<ExpenseFormPage> createState() => _ExpenseFormPageState();
+  State<ChiPhiForm> createState() => _ChiPhiFormState();
 }
 
-class _ExpenseFormPageState extends State<ExpenseFormPage> {
+class _ChiPhiFormState extends State<ChiPhiForm> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _noteController = TextEditingController();
+  final _tenController = TextEditingController();
+  final _giaController = TextEditingController();
+  final _ghiChuController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
   bool isIncome = false;
 
-  Loai? selectedCategory;
-  late List<Loai> _categories = [];
+  Loai? loaiDuocChon;
+  late List<Loai> _loais = [];
 
-  final List<String> _currencies = [
+  final List<String> _tiente = [
     'VND',
     'USD',
     'EUR',
@@ -42,8 +42,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     'SGD',
   ];
 
-  List<Loai> get filteredCategories =>
-      _categories.where((c) => c.isIncome == isIncome).toList();
+  List<Loai> get dsLoaiDuocLoc =>
+      _loais.where((c) => c.isIncome == isIncome).toList();
 
   @override
   void initState() {
@@ -53,30 +53,28 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     /// 🔥 nếu edit thì fill dữ liệu
     if (widget.expense != null) {
       final e = widget.expense!;
-      _titleController.text = e.ten;
-      _amountController.text = e.gia.toString();
-      _noteController.text = e.ghiChu ?? '';
+      _tenController.text = e.ten;
+      _giaController.text = e.gia.toString();
+      _ghiChuController.text = e.ghiChu ?? '';
       _selectedDate = e.ngay;
       isIncome = e.loai!.isIncome;
     }
   }
 
   void _loadCategories() async {
-    final cats = await loaiController.get();
+    final loais = await loaiController.get();
 
     setState(() {
-      _categories = cats;
+      _loais = loais;
 
       /// 🔥 FIX: đồng bộ category khi edit
       if (widget.expense != null) {
-        selectedCategory = _categories.firstWhere(
+        loaiDuocChon = _loais.firstWhere(
           (c) => c.ten == widget.expense!.loai!.ten,
-          orElse: () => _categories.first,
+          orElse: () => _loais.first,
         );
       } else {
-        selectedCategory = filteredCategories.isNotEmpty
-            ? filteredCategories.first
-            : null;
+        loaiDuocChon = dsLoaiDuocLoc.isNotEmpty ? dsLoaiDuocLoc.first : null;
       }
     });
   }
@@ -85,29 +83,29 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     final List<Loai>? updatedList = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            ListCategoryPage(categories: _categories, isIncome: isIncome),
+        builder: (_) => DsLoai(loais: _loais, isIncome: isIncome),
       ),
     );
 
     if (updatedList != null) {
       setState(() {
-        _categories = updatedList;
-        selectedCategory = filteredCategories.first;
+        _loais = updatedList;
+        loaiDuocChon = dsLoaiDuocLoc.first;
       });
     }
   }
 
   void _save() {
-    if (_formKey.currentState!.validate() && selectedCategory != null) {
+    if (_formKey.currentState!.validate() && loaiDuocChon != null) {
       final expense = ChiPhi(
-        ten: _titleController.text.trim(),
-        gia: double.parse(_amountController.text),
-        loai: selectedCategory!,
+        id: widget.expense?.id, // giữ nguyên ID nếu đang edit
+        ten: _tenController.text.trim(),
+        gia: double.parse(_giaController.text),
+        loai: loaiDuocChon!,
         ngay: _selectedDate,
-        ghiChu: _noteController.text.trim().isEmpty
+        ghiChu: _ghiChuController.text.trim().isEmpty
             ? null
-            : _noteController.text.trim(),
+            : _ghiChuController.text.trim(),
       );
 
       Navigator.pop(context, expense);
@@ -143,7 +141,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
 
                   DropdownButtonFormField<String>(
                     value: fromCurrency,
-                    items: _currencies
+                    items: _tiente
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     onChanged: (v) => fromCurrency = v!,
@@ -212,7 +210,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     );
 
     if (result != null && result.toString().isNotEmpty) {
-      _amountController.text = result.toString();
+      _giaController.text = result.toString();
     }
   }
 
@@ -241,8 +239,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 onChanged: (value) {
                   setState(() {
                     isIncome = !value;
-                    selectedCategory = filteredCategories.isNotEmpty
-                        ? filteredCategories.first
+                    loaiDuocChon = dsLoaiDuocLoc.isNotEmpty
+                        ? dsLoaiDuocLoc.first
                         : null;
                   });
                 },
@@ -251,7 +249,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               const SizedBox(height: 16),
 
               TextFormField(
-                controller: _titleController,
+                controller: _tenController,
                 decoration: const InputDecoration(
                   labelText: 'Tiêu đề',
                   border: OutlineInputBorder(),
@@ -266,7 +264,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _amountController,
+                      controller: _giaController,
                       decoration: const InputDecoration(
                         labelText: 'Số tiền',
                         border: OutlineInputBorder(),
@@ -294,17 +292,17 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<Loai>(
-                      value: filteredCategories.contains(selectedCategory)
-                          ? selectedCategory
+                      value: dsLoaiDuocLoc.contains(loaiDuocChon)
+                          ? loaiDuocChon
                           : null,
-                      items: filteredCategories.map((cat) {
+                      items: dsLoaiDuocLoc.map((cat) {
                         return DropdownMenuItem(
                           value: cat,
-                          child: CategoryDropdownItem(category: cat),
+                          child: loaiDropdownItem(category: cat),
                         );
                       }).toList(),
                       onChanged: (value) =>
-                          setState(() => selectedCategory = value),
+                          setState(() => loaiDuocChon = value),
                       decoration: const InputDecoration(
                         labelText: 'Danh mục',
                         border: OutlineInputBorder(),
@@ -347,7 +345,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               const SizedBox(height: 16),
 
               TextFormField(
-                controller: _noteController,
+                controller: _ghiChuController,
                 decoration: const InputDecoration(
                   labelText: 'Ghi chú',
                   border: OutlineInputBorder(),

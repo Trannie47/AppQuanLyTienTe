@@ -14,21 +14,21 @@ class ThongKePage extends StatefulWidget {
 }
 
 class _ThongKePageState extends State<ThongKePage> {
-  DateTime selectedMonth = DateTime.now();
+  DateTime thangDuocChon = DateTime.now();
 
   /// null = tất cả | true = thu | false = chi
   bool? filterIncome;
 
-  /// 🔥 GROUP DATA
+  ///  Nhóm dữ liệu theo category
   Map<String, Map<String, dynamic>> getData() {
     Map<String, Map<String, dynamic>> data = {};
 
     for (var e in widget.list) {
-      if (e.ngay.month == selectedMonth.month &&
-          e.ngay.year == selectedMonth.year) {
+      if (e.ngay.month == thangDuocChon.month &&
+          e.ngay.year == thangDuocChon.year) {
         bool isIncome = e.loai?.isIncome == true;
 
-        /// 🔥 FILTER
+        ///  FILTER
         if (filterIncome != null && isIncome != filterIncome) continue;
 
         String name = e.loai?.ten ?? "Khác";
@@ -44,18 +44,18 @@ class _ThongKePageState extends State<ThongKePage> {
     return data;
   }
 
-  /// 🔥 PICK MONTH
+  /// PICK MONTH
   Future<void> _pickMonth() async {
     final picked = await showMonthPicker(
       context: context,
-      initialDate: selectedMonth,
+      initialDate: thangDuocChon,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
 
     if (picked != null) {
       setState(() {
-        selectedMonth = picked;
+        thangDuocChon = picked;
       });
     }
   }
@@ -72,9 +72,9 @@ class _ThongKePageState extends State<ThongKePage> {
         children: [
           const SizedBox(height: 16),
 
-          /// 🔥 THÁNG
+          ///  THÁNG
           Text(
-            "Tháng ${selectedMonth.month}/${selectedMonth.year}",
+            "Tháng ${thangDuocChon.month}/${thangDuocChon.year}",
             style: const TextStyle(fontSize: 18),
           ),
 
@@ -114,7 +114,7 @@ class _ThongKePageState extends State<ThongKePage> {
 
           const SizedBox(height: 20),
 
-          /// 🔥 PIE CHART
+          // biểu đồ tròn
           Expanded(
             child: PieChart(
               PieChartData(
@@ -137,7 +137,7 @@ class _ThongKePageState extends State<ThongKePage> {
             ),
           ),
 
-          /// 🔥 LEGEND
+          /// thành phần chi tiết
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

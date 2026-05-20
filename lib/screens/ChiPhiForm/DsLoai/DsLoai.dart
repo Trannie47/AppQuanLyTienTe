@@ -1,62 +1,57 @@
 import 'package:dh52201610_luongthihuyentrang/components/itemLoai.dart';
-import 'package:dh52201610_luongthihuyentrang/components/itemexpenses.dart';
 import 'package:dh52201610_luongthihuyentrang/controllers/loaiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/loai.dart';
 import 'package:flutter/material.dart';
-
 import '../../../components/topSwitchTab.dart';
 import '../../../controllers/chiPhiControler.dart';
-import 'CategoryFormPage/page.dart';
+import 'LoaiForm/LoaiForm.dart';
 
-class ListCategoryPage extends StatefulWidget {
-  final List<Loai> categories;
+class DsLoai extends StatefulWidget {
+  final List<Loai> loais;
   final bool isIncome;
 
-  const ListCategoryPage({
-    Key? key,
-    required this.categories,
-    this.isIncome = false,
-  }) : super(key: key);
+  const DsLoai({Key? key, required this.loais, this.isIncome = false})
+    : super(key: key);
 
   @override
-  State<ListCategoryPage> createState() => _ListCategoryPageState();
+  State<DsLoai> createState() => _DsLoaiState();
 }
 
-class _ListCategoryPageState extends State<ListCategoryPage> {
-  late List<Loai> _categories;
+class _DsLoaiState extends State<DsLoai> {
+  late List<Loai> _loais;
   bool _isIncome = false;
 
-  List<Loai> get filteredCategories =>
-      _categories.where((c) => c.isIncome == _isIncome).toList();
+  List<Loai> get loaiDuocLoc =>
+      _loais.where((c) => c.isIncome == _isIncome).toList();
 
   @override
   void initState() {
     super.initState();
-    _categories = widget.categories;
+    _loais = widget.loais;
     _isIncome = widget.isIncome;
     loaiController.get().then((cats) {
-      setState(() => _categories = cats);
+      setState(() => _loais = cats);
     });
   }
 
   //#TODO: Xử lý sửa/xóa danh mục ở đây
   Future<void> _editCategory(Loai category) async {
     // Hiển thị form chỉnh sửa với dữ liệu của category
-    final updatedCategory = await Navigator.push(
+    final loaiDuocCapNhat = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CategoryFormPage(
+        builder: (_) => LoaiForm(
           isIncome: category.isIncome,
-          category: category, // 🔥 truyền vào
+          loai: category, // 🔥 truyền vào
         ),
       ),
     );
-    if (updatedCategory != null && updatedCategory is Loai) {
+    if (loaiDuocCapNhat != null && loaiDuocCapNhat is Loai) {
       setState(() {
-        final index = _categories.indexOf(category);
+        final index = _loais.indexOf(category);
         if (index != -1) {
-          _categories[index] = updatedCategory;
-          loaiController.update(updatedCategory);
+          _loais[index] = loaiDuocCapNhat;
+          loaiController.update(loaiDuocCapNhat);
         }
       });
     }
@@ -97,7 +92,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
 
     if (confirm == true) {
       setState(() {
-        _categories.remove(category);
+        _loais.remove(category);
       });
 
       await loaiController.delete(category.stt);
@@ -112,7 +107,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, _categories); // 🔥 trả dữ liệu
+            Navigator.pop(context, _loais); // 🔥 trả dữ liệu
           },
         ),
       ),
@@ -122,14 +117,12 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
         onPressed: () async {
           final newCategory = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => CategoryFormPage(isIncome: _isIncome),
-            ),
+            MaterialPageRoute(builder: (_) => LoaiForm(isIncome: _isIncome)),
           );
 
           if (newCategory != null && newCategory is Loai) {
             setState(() {
-              _categories.add(newCategory);
+              _loais.add(newCategory);
               loaiController.add(newCategory);
             });
           }
@@ -158,17 +151,15 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
 
             /// 🔥 FIX LỖI: bọc Expanded
             Expanded(
-              child: filteredCategories.isEmpty
+              child: loaiDuocLoc.isEmpty
                   ? const Center(child: Text("Chưa có dữ liệu"))
                   : ListView.builder(
-                      itemCount: filteredCategories.length,
+                      itemCount: loaiDuocLoc.length,
                       itemBuilder: (context, index) {
                         return itemLoai(
-                          category: filteredCategories[index],
-                          onEdit: () =>
-                              _editCategory(filteredCategories[index]),
-                          onDelete: () =>
-                              _deleteCategory(filteredCategories[index]),
+                          category: loaiDuocLoc[index],
+                          onEdit: () => _editCategory(loaiDuocLoc[index]),
+                          onDelete: () => _deleteCategory(loaiDuocLoc[index]),
                         );
                       },
                     ),

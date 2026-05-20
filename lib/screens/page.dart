@@ -1,7 +1,7 @@
 import 'package:dh52201610_luongthihuyentrang/controllers/chiPhiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
-import 'ExpenseFormPage/page.dart';
+import 'ChiPhiForm/ChiPhiForm.dart';
 import 'DsChiPhiPage/DsChiPhiPage.dart';
 import 'ThongKePage/ThongKePage.dart';
 
@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   int currentPage = 0;
 
   final PageStorageBucket bucket = PageStorageBucket();
-  List<ChiPhi> list = [];
+  List<ChiPhi> _dsChiPhi = [];
 
   bool isLoading = true;
 
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       final data = await ChiPhiController.get();
 
       setState(() {
-        list = data;
+        _dsChiPhi = data;
         isLoading = false;
       });
     } catch (e) {
@@ -45,18 +45,18 @@ class _HomePageState extends State<HomePage> {
 
   /// 🔥 MỞ TRANG THÊM (TỐI ƯU)
   Future<void> _openAddOutcomePage() async {
-    final ChiPhi? newExpense = await Navigator.push(
+    final ChiPhi? chiPhiMoi = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const ExpenseFormPage()),
+      MaterialPageRoute(builder: (_) => const ChiPhiForm()),
     );
 
-    if (newExpense != null) {
+    if (chiPhiMoi != null) {
       /// 🔥 gọi API trước để lấy ID thật
-      final saved = await ChiPhiController.add(newExpense);
+      final saved = await ChiPhiController.add(chiPhiMoi);
 
       if (saved != null) {
         setState(() {
-          list.insert(0, saved); // ✅ dùng luôn data từ DB
+          _dsChiPhi.insert(0, saved); // ✅ dùng luôn data từ DB
           currentPage = 0;
         });
       }
@@ -67,11 +67,11 @@ class _HomePageState extends State<HomePage> {
   Widget get currentScreen {
     switch (currentPage) {
       case 0:
-        return DsChiPhiPage(list: list);
+        return DsChiPhiPage(list: _dsChiPhi);
       case 1:
-        return ThongKePage(list: list);
+        return ThongKePage(list: _dsChiPhi);
       default:
-        return DsChiPhiPage(list: list);
+        return DsChiPhiPage(list: _dsChiPhi);
     }
   }
 

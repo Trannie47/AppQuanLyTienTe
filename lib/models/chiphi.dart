@@ -1,11 +1,7 @@
-import 'package:intl/intl.dart';
 import 'loai.dart';
 
 class ChiPhi {
-  static int _stt = 0;
-  static String _ngayCuoi = '';
-
-  String id;
+  int? id;
   String ten;
   double gia;
   Loai? loai;
@@ -13,55 +9,33 @@ class ChiPhi {
   String? ghiChu;
 
   ChiPhi({
-    String? id,
+    this.id,
     required this.ten,
     required this.gia,
     this.loai,
     DateTime? ngay,
     this.ghiChu,
-  }) : ngay = ngay ?? DateTime.now(),
-       this.id = id ?? _generateId();
+  }) : ngay = ngay ?? DateTime.now();
 
-  /// AUTO ID
-  static String _generateId() {
-    final now = DateTime.now();
-    final date = DateFormat('yyyyMMdd').format(now);
-
-    if (_ngayCuoi != date) {
-      _ngayCuoi = date;
-      _stt = 0;
-    }
-
-    _stt++;
-    final seq = _stt.toString().padLeft(3, '0');
-    return '$date$seq';
-  }
-
-  /// FROM JSON (Supabase)
+  /// FROM JSON
   factory ChiPhi.fromJson(Map<String, dynamic> json) {
     return ChiPhi(
-      id: json['id'].toString(),
+      id: json['id'],
       ten: json['ten'] as String,
       gia: (json['gia'] as num).toDouble(),
-
-      /// 👇 FIX: lấy từ join categories
       loai: json['loai'] != null ? Loai.fromJson(json['loai']) : null,
-
       ngay: DateTime.parse(json['ngay']),
       ghiChu: json['ghiChu'],
     );
   }
 
-  /// TO JSON (Supabase)
+  /// TO JSON
   Map<String, dynamic> toJson() {
     return {
-      'ma': id,
+      'id': id,
       'ten': ten,
       'gia': gia,
-
-      /// 👇 FIX: gửi khóa ngoại
       'loai_stt': loai?.stt,
-
       'ngay': ngay.toIso8601String(),
       'ghiChu': ghiChu,
     };
@@ -69,7 +43,7 @@ class ChiPhi {
 
   /// COPY WITH
   ChiPhi copyWith({
-    String? id,
+    int? id,
     String? ten,
     double? gia,
     Loai? loai,

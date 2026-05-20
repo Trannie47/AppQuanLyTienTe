@@ -2,7 +2,7 @@ import 'package:dh52201610_luongthihuyentrang/controllers/chiPhiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import '../../components/itemChiPhi.dart';
-import '../ExpenseFormPage/page.dart';
+import '../ChiPhiForm/ChiPhiForm.dart';
 
 class DsChiPhiPage extends StatefulWidget {
   final List<ChiPhi> list;
@@ -37,14 +37,24 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
     );
 
     if (result == true) {
-      final id = widget.list[index].id; // 🔥 lấy trước
+      final int? id = widget.list[index].id; // 🔥 lấy trước
 
       setState(() {
         widget.list.removeAt(index); // xoá UI
       });
-
-      await ChiPhiController.delete(int.parse(id));
+      if (id != null) {
+        await ChiPhiController.delete(id); // xoá DB
+      }
     }
+  }
+
+  //Load lại data sau khi vuốt lên
+  Future<void> _loadData() async {
+    final data = await ChiPhiController.get();
+    setState(() {
+      widget.list.clear();
+      widget.list.addAll(data);
+    });
   }
 
   @override
@@ -56,37 +66,40 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
       ),
       body: widget.list.isEmpty
           ? const Center(child: Text("Chưa có dữ liệu"))
-          : ListView.builder(
-              itemCount: widget.list.length,
-              itemBuilder: (context, index) {
-                final item = widget.list[index];
+          : RefreshIndicator(
+              onRefresh: () => _loadData(),
+              child: ListView.builder(
+                itemCount: widget.list.length,
+                itemBuilder: (context, index) {
+                  final item = widget.list[index];
 
-                return InkWell(
-                  /// 🔥 CLICK → EDIT
-                  onTap: () async {
-                    final updated = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ExpenseFormPage(expense: item),
-                      ),
-                    );
+                  return InkWell(
+                    /// 🔥 CLICK → EDIT
+                    onTap: () async {
+                      final updated = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ChiPhiForm(expense: item),
+                        ),
+                      );
 
-                    if (updated != null) {
-                      setState(() {
-                        widget.list[index] = updated;
-                        ChiPhiController.update(updated);
-                      });
-                    }
-                  },
+                      if (updated != null) {
+                        setState(() {
+                          widget.list[index] = updated;
+                          ChiPhiController.update(updated);
+                        });
+                      }
+                    },
 
-                  /// 🔥 NHẤN GIỮ → XOÁ
-                  onLongPress: () {
-                    _confirmDelete(index);
-                  },
+                    /// 🔥 NHẤN GIỮ → XOÁ
+                    onLongPress: () {
+                      _confirmDelete(index);
+                    },
 
-                  child: itemChiPhi(chiPhi: item),
-                );
-              },
+                    child: itemChiPhi(chiPhi: item),
+                  );
+                },
+              ),
             ),
     );
   }
