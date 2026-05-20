@@ -1,7 +1,7 @@
 import 'package:dh52201610_luongthihuyentrang/components/itemCategory.dart';
 import 'package:dh52201610_luongthihuyentrang/components/itemexpenses.dart';
 import 'package:dh52201610_luongthihuyentrang/controllers/categoryControler.dart';
-import 'package:dh52201610_luongthihuyentrang/models/category.dart';
+import 'package:dh52201610_luongthihuyentrang/models/loai.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/topSwitchTab.dart';
@@ -9,7 +9,7 @@ import '../../../controllers/expenseControler.dart';
 import 'CategoryFormPage/page.dart';
 
 class ListCategoryPage extends StatefulWidget {
-  final List<Category> categories;
+  final List<Loai> categories;
   final bool isIncome;
 
   const ListCategoryPage({
@@ -23,10 +23,10 @@ class ListCategoryPage extends StatefulWidget {
 }
 
 class _ListCategoryPageState extends State<ListCategoryPage> {
-  late List<Category> _categories;
+  late List<Loai> _categories;
   bool _isIncome = false;
 
-  List<Category> get filteredCategories =>
+  List<Loai> get filteredCategories =>
       _categories.where((c) => c.isIncome == _isIncome).toList();
 
   @override
@@ -40,7 +40,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
   }
 
   //#TODO: Xử lý sửa/xóa danh mục ở đây
-  Future<void> _editCategory(Category category) async {
+  Future<void> _editCategory(Loai category) async {
     // Hiển thị form chỉnh sửa với dữ liệu của category
     final updatedCategory = await Navigator.push(
       context,
@@ -51,7 +51,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
         ),
       ),
     );
-    if (updatedCategory != null && updatedCategory is Category) {
+    if (updatedCategory != null && updatedCategory is Loai) {
       setState(() {
         final index = _categories.indexOf(category);
         if (index != -1) {
@@ -62,7 +62,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
     }
   }
 
-  Future<void> _deleteCategory(Category category) async {
+  Future<void> _deleteCategory(Loai category) async {
     /// 🔥 kiểm tra trước
     final hasData = await ExpenseController.hasExpenseByCategory(category.stt);
 
@@ -127,7 +127,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
             ),
           );
 
-          if (newCategory != null && newCategory is Category) {
+          if (newCategory != null && newCategory is Loai) {
             setState(() {
               _categories.add(newCategory);
               CategoryController.add(newCategory);

@@ -1,15 +1,15 @@
+import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../components/CategoryDropdownItem.dart';
 import '../../components/topSwitchTab.dart';
 import '../../controllers/categoryControler.dart';
 import '../../controllers/otherApi.dart';
-import '../../models/expense.dart';
-import '../../models/category.dart';
+import '../../models/loai.dart';
 import 'ListCategory/page.dart';
 
 class ExpenseFormPage extends StatefulWidget {
-  final Expense? expense;
+  final ChiPhi? expense;
 
   const ExpenseFormPage({super.key, this.expense});
 
@@ -26,8 +26,8 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   DateTime _selectedDate = DateTime.now();
   bool isIncome = false;
 
-  Category? selectedCategory;
-  late List<Category> _categories = [];
+  Loai? selectedCategory;
+  late List<Loai> _categories = [];
 
   final List<String> _currencies = [
     'VND',
@@ -42,7 +42,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     'SGD',
   ];
 
-  List<Category> get filteredCategories =>
+  List<Loai> get filteredCategories =>
       _categories.where((c) => c.isIncome == isIncome).toList();
 
   @override
@@ -53,11 +53,11 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
     /// 🔥 nếu edit thì fill dữ liệu
     if (widget.expense != null) {
       final e = widget.expense!;
-      _titleController.text = e.title;
-      _amountController.text = e.amount.toString();
-      _noteController.text = e.note ?? '';
-      _selectedDate = e.date;
-      isIncome = e.category!.isIncome;
+      _titleController.text = e.ten;
+      _amountController.text = e.gia.toString();
+      _noteController.text = e.ghiChu ?? '';
+      _selectedDate = e.ngay;
+      isIncome = e.loai!.isIncome;
     }
   }
 
@@ -70,7 +70,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
       /// 🔥 FIX: đồng bộ category khi edit
       if (widget.expense != null) {
         selectedCategory = _categories.firstWhere(
-          (c) => c.name == widget.expense!.category!.name,
+          (c) => c.ten == widget.expense!.loai!.ten,
           orElse: () => _categories.first,
         );
       } else {
@@ -82,7 +82,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   }
 
   Future<void> _selectCategory() async {
-    final List<Category>? updatedList = await Navigator.push(
+    final List<Loai>? updatedList = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) =>
@@ -100,12 +100,12 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
 
   void _save() {
     if (_formKey.currentState!.validate() && selectedCategory != null) {
-      final expense = Expense(
-        title: _titleController.text.trim(),
-        amount: double.parse(_amountController.text),
-        category: selectedCategory!,
-        date: _selectedDate,
-        note: _noteController.text.trim().isEmpty
+      final expense = ChiPhi(
+        ten: _titleController.text.trim(),
+        gia: double.parse(_amountController.text),
+        loai: selectedCategory!,
+        ngay: _selectedDate,
+        ghiChu: _noteController.text.trim().isEmpty
             ? null
             : _noteController.text.trim(),
       );
@@ -293,7 +293,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField<Category>(
+                    child: DropdownButtonFormField<Loai>(
                       value: filteredCategories.contains(selectedCategory)
                           ? selectedCategory
                           : null,

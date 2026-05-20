@@ -1,6 +1,6 @@
 import 'package:dh52201610_luongthihuyentrang/controllers/expenseControler.dart';
+import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
-import '../models/expense.dart';
 import 'ExpenseFormPage/page.dart';
 import 'ListExpensePage/page.dart';
 import 'StatsPage/page.dart';
@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   int currentPage = 0;
 
   final PageStorageBucket bucket = PageStorageBucket();
-  List<Expense> list = [];
+  List<ChiPhi> list = [];
 
   bool isLoading = true;
 
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
 
   /// 🔥 MỞ TRANG THÊM (TỐI ƯU)
   Future<void> _openAddOutcomePage() async {
-    final Expense? newExpense = await Navigator.push(
+    final ChiPhi? newExpense = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ExpenseFormPage()),
     );

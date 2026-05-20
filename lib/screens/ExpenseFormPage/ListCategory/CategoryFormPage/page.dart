@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../models/category.dart';
+import '../../../../models/loai.dart';
 
 class CategoryFormPage extends StatefulWidget {
   final bool isIncome;
-  final Category? category;
+  final Loai? category;
 
   const CategoryFormPage({super.key, required this.isIncome, this.category});
 
@@ -17,7 +17,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
   final _nameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? _image;
-  late Category? _category;
+  late Loai? _category;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
     if (widget.category != null) {
       _category = widget.category!;
-      _nameController.text = widget.category!.name;
+      _nameController.text = widget.category!.ten;
 
       if (widget.category!.icon.isNotEmpty) {
         _image = File(widget.category!.icon);
@@ -73,14 +73,14 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
 
     if (widget.category != null) {
       // Sửa danh mục
-      Category updatedCategory = widget.category!.copyWith(
-        name: _nameController.text.trim(),
+      Loai updatedCategory = widget.category!.copyWith(
+        ten: _nameController.text.trim(),
         icon: _image?.path ?? widget.category!.icon,
       );
       Navigator.pop(context, updatedCategory);
     } else {
-      final Category category = Category(
-        name: _nameController.text.trim(),
+      final Loai category = Loai(
+        ten: _nameController.text.trim(),
         icon: _image?.path ?? "",
         isIncome: widget.isIncome,
       );

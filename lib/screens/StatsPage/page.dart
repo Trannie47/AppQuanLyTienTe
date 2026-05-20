@@ -2,10 +2,10 @@ import 'package:dh52201610_luongthihuyentrang/controllers/formatController.dart'
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import '../../models/expense.dart';
+import '../../models/chiphi.dart';
 
 class StatsPage extends StatefulWidget {
-  final List<Expense> list;
+  final List<ChiPhi> list;
 
   const StatsPage({super.key, required this.list});
 
@@ -24,20 +24,20 @@ class _StatsPageState extends State<StatsPage> {
     Map<String, Map<String, dynamic>> data = {};
 
     for (var e in widget.list) {
-      if (e.date.month == selectedMonth.month &&
-          e.date.year == selectedMonth.year) {
-        bool isIncome = e.category?.isIncome == true;
+      if (e.ngay.month == selectedMonth.month &&
+          e.ngay.year == selectedMonth.year) {
+        bool isIncome = e.loai?.isIncome == true;
 
         /// 🔥 FILTER
         if (filterIncome != null && isIncome != filterIncome) continue;
 
-        String name = e.category?.name ?? "Khác";
+        String name = e.loai?.ten ?? "Khác";
 
         if (!data.containsKey(name)) {
           data[name] = {"total": 0.0, "isIncome": isIncome};
         }
 
-        data[name]!["total"] += e.amount;
+        data[name]!["total"] += e.gia;
       }
     }
 

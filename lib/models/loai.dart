@@ -1,20 +1,20 @@
-class Category {
+class Loai {
   static int _counter = 0;
 
   int stt;
-  String name;
+  String ten;
   String icon;
   bool isIncome;
 
   /// Tạo mới (auto tăng stt)
-  Category({required this.name, required this.icon, this.isIncome = false})
+  Loai({required this.ten, required this.icon, this.isIncome = false})
     : stt = ++_counter;
 
   /// Tạo từ JSON (Supabase)
-  factory Category.fromJson(Map<String, dynamic> json) {
-    final category = Category._internal(
+  factory Loai.fromJson(Map<String, dynamic> json) {
+    final category = Loai._internal(
       stt: json['stt'] as int,
-      name: json['name'] as String,
+      ten: json['ten'] as String,
       icon: json['icon'] as String,
       isIncome: json['is_income'] as bool? ?? false, // 👈 FIX
     );
@@ -28,9 +28,9 @@ class Category {
   }
 
   /// Constructor nội bộ (không auto tăng)
-  Category._internal({
+  Loai._internal({
     required this.stt,
-    required this.name,
+    required this.ten,
     required this.icon,
     required this.isIncome,
   });
@@ -39,17 +39,17 @@ class Category {
   Map<String, dynamic> toJson() {
     return {
       'stt': stt,
-      'name': name,
+      'ten': ten,
       'icon': icon,
       'is_income': isIncome, // 👈 FIX
     };
   }
 
   /// Copy dữ liệu
-  Category copyWith({int? stt, String? name, String? icon, bool? isIncome}) {
-    return Category._internal(
+  Loai copyWith({int? stt, String? ten, String? icon, bool? isIncome}) {
+    return Loai._internal(
       stt: stt ?? this.stt,
-      name: name ?? this.name,
+      ten: ten ?? this.ten,
       icon: icon ?? this.icon,
       isIncome: isIncome ?? this.isIncome,
     );
@@ -57,6 +57,6 @@ class Category {
 
   @override
   String toString() {
-    return 'Category(stt: $stt, name: $name, icon: $icon, isIncome: $isIncome)';
+    return 'Category(stt: $stt, name: $ten, icon: $icon, isIncome: $isIncome)';
   }
 }

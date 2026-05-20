@@ -1,16 +1,16 @@
 import 'dart:io';
+import 'package:dh52201610_luongthihuyentrang/models/loai.dart';
 import 'package:flutter/material.dart';
-import '../models/category.dart';
 
 class CategoryDropdownItem extends StatelessWidget {
-  final Category category;
+  final Loai category;
 
   const CategoryDropdownItem({super.key, required this.category});
 
   Widget _buildIcon() {
     if (category.icon == null || category.icon!.isEmpty) {
       return Text(
-        category.name[0].toUpperCase(),
+        category.ten[0].toUpperCase(),
         style: const TextStyle(fontWeight: FontWeight.bold),
       );
     }
@@ -29,7 +29,7 @@ class CategoryDropdownItem extends StatelessWidget {
       return Image.file(file, width: 20, height: 20, fit: BoxFit.cover);
     }
 
-    return Text(category.name[0].toUpperCase());
+    return Text(category.ten[0].toUpperCase());
   }
 
   @override
@@ -39,7 +39,7 @@ class CategoryDropdownItem extends StatelessWidget {
       children: [
         SizedBox(width: 24, height: 24, child: _buildIcon()),
         const SizedBox(width: 8),
-        Flexible(child: Text(category.name, overflow: TextOverflow.ellipsis)),
+        Flexible(child: Text(category.ten, overflow: TextOverflow.ellipsis)),
       ],
     );
   }

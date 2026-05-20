@@ -1,48 +1,48 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/expense.dart';
+import '../models/chiphi.dart';
 
 class ExpenseController {
   static final supabase = Supabase.instance.client;
 
-  /// 🔥 GET ALL (JOIN CATEGORY)
-  static Future<List<Expense>> get() async {
+  /// 🔥 GET ALL (JOIN Loai)
+  static Future<List<ChiPhi>> get() async {
     final data = await supabase
-        .from('expenses')
-        .select('*, categories(*)')
-        .order('date', ascending: false);
+        .from('chiphi')
+        .select('*, loai(*)')
+        .order('ngay', ascending: false);
 
     return (data as List)
-        .map((e) => Expense.fromJson(e)) // 🔥 FIX
+        .map((e) => ChiPhi.fromJson(e)) // 🔥 FIX
         .toList();
   }
 
   /// 🔥 ADD (KHÔNG gửi id)
-  static Future<Expense?> add(Expense expense) async {
+  static Future<ChiPhi?> add(ChiPhi expense) async {
     final data = await supabase
-        .from('expenses')
+        .from('chiphi')
         .insert({
-          'title': expense.title,
-          'amount': expense.amount,
-          'category_stt': expense.category?.stt,
-          'date': expense.date.toIso8601String(),
-          'note': expense.note,
+          'ten': expense.ten,
+          'gia': expense.gia,
+          'loai_stt': expense.loai?.stt,
+          'ngay': expense.ngay.toIso8601String(),
+          'ghiChu': expense.ghiChu,
         })
-        .select('*, categories(*)') // 🔥 lấy luôn category
+        .select('*, loai(*)') // 🔥 lấy luôn category
         .single();
 
-    return Expense.fromJson(data);
+    return ChiPhi.fromJson(data);
   }
 
   /// 🔥 UPDATE
-  static Future<void> update(Expense expense) async {
+  static Future<void> update(ChiPhi expense) async {
     await supabase
-        .from('expenses')
+        .from('chiphi')
         .update({
-          'title': expense.title,
-          'amount': expense.amount,
-          'category_stt': expense.category?.stt,
-          'date': expense.date.toIso8601String(),
-          'note': expense.note,
+          'ten': expense.ten,
+          'gia': expense.gia,
+          'loai_stt': expense.loai?.stt,
+          'ngay': expense.ngay.toIso8601String(),
+          'ghiChu': expense.ghiChu,
         })
         .eq('id', expense.id); // id từ DB
   }
@@ -54,9 +54,9 @@ class ExpenseController {
 
   static Future<bool> hasExpenseByCategory(int categoryId) async {
     final data = await supabase
-        .from('expenses')
+        .from('chiphi')
         .select('id')
-        .eq('category_stt', categoryId)
+        .eq('loai_stt', categoryId)
         .limit(1);
 
     return (data as List).isNotEmpty;

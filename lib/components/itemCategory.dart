@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../models/category.dart';
+import '../models/loai.dart';
 import '../controllers/ProcessImage.dart';
 
 Widget ItemCategory({
-  required Category category,
+  required Loai category,
   Function()? onEdit,
   Function()? onDelete,
   bool compact = false,
@@ -65,7 +65,7 @@ Widget ItemCategory({
           height: compact ? 32 : 45,
           decoration: BoxDecoration(
             color: Colors
-                .primaries[category.name.hashCode % Colors.primaries.length]
+                .primaries[category.ten.hashCode % Colors.primaries.length]
                 .withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
@@ -77,7 +77,7 @@ Widget ItemCategory({
         /// NAME
         Expanded(
           child: Text(
-            category.name,
+            category.ten,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: compact ? 14 : 16,
@@ -108,9 +108,9 @@ Widget ItemCategory({
 }
 
 /// fallback icon
-Widget _buildTextIcon(Category category) {
+Widget _buildTextIcon(Loai category) {
   return Text(
-    category.name.isNotEmpty ? category.name[0].toUpperCase() : "❓",
+    category.ten.isNotEmpty ? category.ten[0].toUpperCase() : "❓",
     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
   );
 }

@@ -1,34 +1,34 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/category.dart';
+import '../models/loai.dart';
 
 class CategoryController {
   static final supabase = Supabase.instance.client;
 
   /// 🔥 GET ALL
-  static Future<List<Category>> get() async {
+  static Future<List<Loai>> get() async {
     final data = await supabase
-        .from('categories')
+        .from('loai')
         .select()
         .order('stt', ascending: true);
 
-    return (data as List).map((e) => Category.fromJson(e)).toList();
+    return (data as List).map((e) => Loai.fromJson(e)).toList();
   }
 
   /// ADD (KHÔNG gửi stt)
-  static Future<void> add(Category category) async {
-    await supabase.from('categories').insert({
-      'name': category.name,
+  static Future<void> add(Loai category) async {
+    await supabase.from('loai').insert({
+      'ten': category.ten,
       'icon': category.icon,
       'is_income': category.isIncome,
     });
   }
 
   ///  UPDATE
-  static Future<void> update(Category category) async {
+  static Future<void> update(Loai category) async {
     await supabase
-        .from('categories')
+        .from('loai')
         .update({
-          'name': category.name,
+          'ten': category.ten,
           'icon': category.icon,
           'is_income': category.isIncome,
         })
@@ -37,6 +37,6 @@ class CategoryController {
 
   /// 🔥 DELETE
   static Future<void> delete(int stt) async {
-    await supabase.from('categories').delete().eq('stt', stt);
+    await supabase.from('loai').delete().eq('stt', stt);
   }
 }

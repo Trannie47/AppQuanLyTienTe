@@ -1,11 +1,11 @@
 import 'package:dh52201610_luongthihuyentrang/controllers/expenseControler.dart';
+import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import '../../components/itemExpenses.dart';
-import '../../models/expense.dart';
 import '../ExpenseFormPage/page.dart';
 
 class ListExpensePage extends StatefulWidget {
-  final List<Expense> list;
+  final List<ChiPhi> list;
 
   const ListExpensePage({super.key, required this.list});
 
@@ -84,7 +84,7 @@ class _ListExpensePageState extends State<ListExpensePage> {
                     _confirmDelete(index);
                   },
 
-                  child: ItemExpenses(expense: item),
+                  child: ItemExpenses(chiPhi: item),
                 );
               },
             ),

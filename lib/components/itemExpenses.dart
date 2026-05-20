@@ -2,29 +2,29 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../controllers/formatController.dart';
-import '../models/expense.dart';
+import '../models/chiphi.dart';
 
-Widget ItemExpenses({required Expense expense}) {
-  final category = expense.category;
-  final categoryName = category?.name ?? "Other";
-  final isIncome = category?.isIncome == true;
+Widget ItemExpenses({required ChiPhi chiPhi}) {
+  final loai = chiPhi.loai;
+  final tenLoai = loai?.ten ?? "Other";
+  final isIncome = loai?.isIncome == true;
 
   Widget buildIcon() {
-    if (category?.icon == null || category!.icon!.isEmpty) {
-      return _buildTextIcon(categoryName);
+    if (loai?.icon == null || loai!.icon!.isEmpty) {
+      return _buildTextIcon(tenLoai);
     }
 
-    if (category!.icon!.startsWith('assets')) {
+    if (loai!.icon!.startsWith('assets')) {
       return Image.asset(
-        category.icon!,
+        loai.icon!,
         width: 24,
         height: 24,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _buildTextIcon(categoryName),
+        errorBuilder: (_, __, ___) => _buildTextIcon(tenLoai),
       );
     }
 
-    final file = File(category.icon!);
+    final file = File(loai.icon!);
 
     if (file.existsSync()) {
       return Image.file(
@@ -32,11 +32,11 @@ Widget ItemExpenses({required Expense expense}) {
         width: 24,
         height: 24,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _buildTextIcon(categoryName),
+        errorBuilder: (_, __, ___) => _buildTextIcon(tenLoai),
       );
     }
 
-    return _buildTextIcon(categoryName);
+    return _buildTextIcon(tenLoai);
   }
 
   return Container(
@@ -60,8 +60,7 @@ Widget ItemExpenses({required Expense expense}) {
           width: 45,
           height: 45,
           decoration: BoxDecoration(
-            color: Colors
-                .primaries[categoryName.hashCode % Colors.primaries.length]
+            color: Colors.primaries[tenLoai.hashCode % Colors.primaries.length]
                 .withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
@@ -76,7 +75,7 @@ Widget ItemExpenses({required Expense expense}) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                expense.title,
+                chiPhi.ten,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -86,14 +85,14 @@ Widget ItemExpenses({required Expense expense}) {
               const SizedBox(height: 4),
 
               Text(
-                categoryName,
+                tenLoai,
                 style: TextStyle(fontSize: 13, color: Colors.grey[600]),
               ),
 
               const SizedBox(height: 4),
 
               Text(
-                DateFormat('dd/MM/yyyy').format(expense.date),
+                DateFormat('dd/MM/yyyy').format(chiPhi.ngay),
                 style: TextStyle(fontSize: 12, color: Colors.grey[500]),
               ),
             ],
@@ -105,7 +104,7 @@ Widget ItemExpenses({required Expense expense}) {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              formatMoney(expense.amount * (isIncome ? 1 : -1)),
+              formatMoney(chiPhi.gia * (isIncome ? 1 : -1)),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -115,9 +114,9 @@ Widget ItemExpenses({required Expense expense}) {
 
             const SizedBox(height: 4),
 
-            if (expense.note != null && expense.note!.isNotEmpty)
+            if (chiPhi.ghiChu != null && chiPhi.ghiChu!.isNotEmpty)
               Text(
-                expense.note!,
+                chiPhi.ghiChu!,
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
           ],
