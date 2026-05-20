@@ -1,7 +1,7 @@
-import 'package:dh52201610_luongthihuyentrang/controllers/expenseControler.dart';
+import 'package:dh52201610_luongthihuyentrang/controllers/chiPhiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
-import '../../components/itemExpenses.dart';
+import '../../components/itemChiPhi.dart';
 import '../ExpenseFormPage/page.dart';
 
 class ListExpensePage extends StatefulWidget {
@@ -43,7 +43,7 @@ class _ListExpensePageState extends State<ListExpensePage> {
         widget.list.removeAt(index); // xoá UI
       });
 
-      await ExpenseController.delete(int.parse(id));
+      await ChiPhiController.delete(int.parse(id));
     }
   }
 
@@ -74,7 +74,7 @@ class _ListExpensePageState extends State<ListExpensePage> {
                     if (updated != null) {
                       setState(() {
                         widget.list[index] = updated;
-                        ExpenseController.update(updated);
+                        ChiPhiController.update(updated);
                       });
                     }
                   },
@@ -84,7 +84,7 @@ class _ListExpensePageState extends State<ListExpensePage> {
                     _confirmDelete(index);
                   },
 
-                  child: ItemExpenses(chiPhi: item),
+                  child: itemChiPhi(chiPhi: item),
                 );
               },
             ),

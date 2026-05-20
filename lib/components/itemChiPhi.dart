@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../controllers/formatController.dart';
 import '../models/chiphi.dart';
 
-Widget ItemExpenses({required ChiPhi chiPhi}) {
+Widget itemChiPhi({required ChiPhi chiPhi}) {
   final loai = chiPhi.loai;
   final tenLoai = loai?.ten ?? "Other";
   final isIncome = loai?.isIncome == true;

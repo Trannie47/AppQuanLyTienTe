@@ -1,4 +1,4 @@
-import 'package:dh52201610_luongthihuyentrang/controllers/expenseControler.dart';
+import 'package:dh52201610_luongthihuyentrang/controllers/chiPhiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import 'ExpenseFormPage/page.dart';
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     setState(() => isLoading = true);
 
     try {
-      final data = await ExpenseController.get();
+      final data = await ChiPhiController.get();
 
       setState(() {
         list = data;
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
 
     if (newExpense != null) {
       /// 🔥 gọi API trước để lấy ID thật
-      final saved = await ExpenseController.add(newExpense);
+      final saved = await ChiPhiController.add(newExpense);
 
       if (saved != null) {
         setState(() {

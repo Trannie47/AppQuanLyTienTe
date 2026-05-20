@@ -1,11 +1,11 @@
-import 'package:dh52201610_luongthihuyentrang/components/itemCategory.dart';
+import 'package:dh52201610_luongthihuyentrang/components/itemLoai.dart';
 import 'package:dh52201610_luongthihuyentrang/components/itemexpenses.dart';
-import 'package:dh52201610_luongthihuyentrang/controllers/categoryControler.dart';
+import 'package:dh52201610_luongthihuyentrang/controllers/loaiControler.dart';
 import 'package:dh52201610_luongthihuyentrang/models/loai.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/topSwitchTab.dart';
-import '../../../controllers/expenseControler.dart';
+import '../../../controllers/chiPhiControler.dart';
 import 'CategoryFormPage/page.dart';
 
 class ListCategoryPage extends StatefulWidget {
@@ -34,7 +34,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
     super.initState();
     _categories = widget.categories;
     _isIncome = widget.isIncome;
-    CategoryController.get().then((cats) {
+    loaiController.get().then((cats) {
       setState(() => _categories = cats);
     });
   }
@@ -56,7 +56,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
         final index = _categories.indexOf(category);
         if (index != -1) {
           _categories[index] = updatedCategory;
-          CategoryController.update(updatedCategory);
+          loaiController.update(updatedCategory);
         }
       });
     }
@@ -64,7 +64,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
 
   Future<void> _deleteCategory(Loai category) async {
     /// 🔥 kiểm tra trước
-    final hasData = await ExpenseController.hasExpenseByCategory(category.stt);
+    final hasData = await ChiPhiController.hasExpenseByCategory(category.stt);
 
     if (hasData) {
       showDialog(
@@ -100,7 +100,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
         _categories.remove(category);
       });
 
-      await CategoryController.delete(category.stt);
+      await loaiController.delete(category.stt);
     }
   }
 
@@ -130,7 +130,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
           if (newCategory != null && newCategory is Loai) {
             setState(() {
               _categories.add(newCategory);
-              CategoryController.add(newCategory);
+              loaiController.add(newCategory);
             });
           }
         },
@@ -163,7 +163,7 @@ class _ListCategoryPageState extends State<ListCategoryPage> {
                   : ListView.builder(
                       itemCount: filteredCategories.length,
                       itemBuilder: (context, index) {
-                        return ItemCategory(
+                        return itemLoai(
                           category: filteredCategories[index],
                           onEdit: () =>
                               _editCategory(filteredCategories[index]),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../components/CategoryDropdownItem.dart';
 import '../../components/topSwitchTab.dart';
-import '../../controllers/categoryControler.dart';
+import '../../controllers/loaiControler.dart';
 import '../../controllers/otherApi.dart';
 import '../../models/loai.dart';
 import 'ListCategory/page.dart';
@@ -62,7 +62,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
   }
 
   void _loadCategories() async {
-    final cats = await CategoryController.get();
+    final cats = await loaiController.get();
 
     setState(() {
       _categories = cats;

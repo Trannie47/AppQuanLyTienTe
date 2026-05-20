@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/loai.dart';
 import '../controllers/ProcessImage.dart';
 
-Widget ItemCategory({
+Widget itemLoai({
   required Loai category,
   Function()? onEdit,
   Function()? onDelete,

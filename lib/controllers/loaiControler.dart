@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/loai.dart';
 
-class CategoryController {
+class loaiController {
   static final supabase = Supabase.instance.client;
 
   /// 🔥 GET ALL
