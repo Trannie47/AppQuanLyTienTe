@@ -9,7 +9,8 @@ class ChiPhiController {
     final data = await supabase
         .from('chiphi')
         .select('*, loai(*)')
-        .order('ngay', ascending: false);
+        .order('ngay', ascending: false)
+        .order('id', ascending: false);
 
     return (data as List).map((e) => ChiPhi.fromJson(e)).toList();
   }

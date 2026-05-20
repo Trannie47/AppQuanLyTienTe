@@ -67,11 +67,11 @@ class _HomePageState extends State<HomePage> {
   Widget get currentScreen {
     switch (currentPage) {
       case 0:
-        return DsChiPhiPage(list: _dsChiPhi);
+        return DsChiPhiPage(dsChiPhi: _dsChiPhi);
       case 1:
         return ThongKePage(list: _dsChiPhi);
       default:
-        return DsChiPhiPage(list: _dsChiPhi);
+        return DsChiPhiPage(dsChiPhi: _dsChiPhi);
     }
   }
 

@@ -48,7 +48,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    _loadLoai();
 
     /// 🔥 nếu edit thì fill dữ liệu
     if (widget.expense != null) {
@@ -61,7 +61,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
     }
   }
 
-  void _loadCategories() async {
+  void _loadLoai() async {
     final loais = await loaiController.get();
 
     setState(() {
@@ -79,17 +79,17 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
     });
   }
 
-  Future<void> _selectCategory() async {
-    final List<Loai>? updatedList = await Navigator.push(
+  Future<void> _chonLoai() async {
+    final List<Loai>? dsLoaiCapNhat = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => DsLoai(loais: _loais, isIncome: isIncome),
       ),
     );
 
-    if (updatedList != null) {
+    if (dsLoaiCapNhat != null) {
       setState(() {
-        _loais = updatedList;
+        _loais = dsLoaiCapNhat;
         loaiDuocChon = dsLoaiDuocLoc.first;
       });
     }
@@ -97,7 +97,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
 
   void _save() {
     if (_formKey.currentState!.validate() && loaiDuocChon != null) {
-      final expense = ChiPhi(
+      final chiPhi = ChiPhi(
         id: widget.expense?.id, // giữ nguyên ID nếu đang edit
         ten: _tenController.text.trim(),
         gia: double.parse(_giaController.text),
@@ -108,7 +108,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
             : _ghiChuController.text.trim(),
       );
 
-      Navigator.pop(context, expense);
+      Navigator.pop(context, chiPhi);
     }
   }
 
@@ -310,7 +310,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
                     ),
                   ),
                   IconButton(
-                    onPressed: _selectCategory,
+                    onPressed: _chonLoai,
                     icon: const Icon(Icons.menu),
                   ),
                 ],

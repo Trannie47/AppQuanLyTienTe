@@ -5,9 +5,9 @@ import '../../components/itemChiPhi.dart';
 import '../ChiPhiForm/ChiPhiForm.dart';
 
 class DsChiPhiPage extends StatefulWidget {
-  final List<ChiPhi> list;
+  final List<ChiPhi> dsChiPhi;
 
-  const DsChiPhiPage({super.key, required this.list});
+  const DsChiPhiPage({super.key, required this.dsChiPhi});
 
   @override
   State<DsChiPhiPage> createState() => _DsChiPhiPageState();
@@ -15,7 +15,7 @@ class DsChiPhiPage extends StatefulWidget {
 
 class _DsChiPhiPageState extends State<DsChiPhiPage> {
   /// 🔥 dialog xác nhận xoá
-  Future<void> _confirmDelete(int index) async {
+  Future<void> _xacNhanXoa(int index) async {
     final result = await showDialog(
       context: context,
       builder: (context) {
@@ -37,10 +37,10 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
     );
 
     if (result == true) {
-      final int? id = widget.list[index].id; // 🔥 lấy trước
+      final int? id = widget.dsChiPhi[index].id; // 🔥 lấy trước
 
       setState(() {
-        widget.list.removeAt(index); // xoá UI
+        widget.dsChiPhi.removeAt(index); // xoá UI
       });
       if (id != null) {
         await ChiPhiController.delete(id); // xoá DB
@@ -52,8 +52,8 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
   Future<void> _loadData() async {
     final data = await ChiPhiController.get();
     setState(() {
-      widget.list.clear();
-      widget.list.addAll(data);
+      widget.dsChiPhi.clear();
+      widget.dsChiPhi.addAll(data);
     });
   }
 
@@ -64,14 +64,14 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
         title: const Text("Danh sách chi tiêu"),
         centerTitle: true,
       ),
-      body: widget.list.isEmpty
+      body: widget.dsChiPhi.isEmpty
           ? const Center(child: Text("Chưa có dữ liệu"))
           : RefreshIndicator(
               onRefresh: () => _loadData(),
               child: ListView.builder(
-                itemCount: widget.list.length,
+                itemCount: widget.dsChiPhi.length,
                 itemBuilder: (context, index) {
-                  final item = widget.list[index];
+                  final item = widget.dsChiPhi[index];
 
                   return InkWell(
                     /// 🔥 CLICK → EDIT
@@ -85,7 +85,7 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
 
                       if (updated != null) {
                         setState(() {
-                          widget.list[index] = updated;
+                          widget.dsChiPhi[index] = updated;
                           ChiPhiController.update(updated);
                         });
                       }
@@ -93,7 +93,7 @@ class _DsChiPhiPageState extends State<DsChiPhiPage> {
 
                     /// 🔥 NHẤN GIỮ → XOÁ
                     onLongPress: () {
-                      _confirmDelete(index);
+                      _xacNhanXoa(index);
                     },
 
                     child: itemChiPhi(chiPhi: item),
