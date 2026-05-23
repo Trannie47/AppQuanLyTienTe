@@ -1,4 +1,4 @@
-import 'package:dh52201610_luongthihuyentrang/components/loaiDropdownItem.dart';
+import 'package:dh52201610_luongthihuyentrang/components/ItemloaiDropdown.dart';
 import 'package:dh52201610_luongthihuyentrang/models/chiphi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -298,7 +298,7 @@ class _ChiPhiFormState extends State<ChiPhiForm> {
                       items: dsLoaiDuocLoc.map((cat) {
                         return DropdownMenuItem(
                           value: cat,
-                          child: loaiDropdownItem(category: cat),
+                          child: ItemLoaiThaXuong(category: cat),
                         );
                       }).toList(),
                       onChanged: (value) =>

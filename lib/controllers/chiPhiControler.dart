@@ -4,7 +4,6 @@ import '../models/chiphi.dart';
 class ChiPhiController {
   static final supabase = Supabase.instance.client;
 
-  /// GET ALL
   static Future<List<ChiPhi>> get() async {
     final data = await supabase
         .from('chiphi')
@@ -15,7 +14,6 @@ class ChiPhiController {
     return (data as List).map((e) => ChiPhi.fromJson(e)).toList();
   }
 
-  /// ADD
   static Future<ChiPhi?> add(ChiPhi expense) async {
     final data = await supabase
         .from('chiphi')
@@ -32,7 +30,6 @@ class ChiPhiController {
     return ChiPhi.fromJson(data);
   }
 
-  /// UPDATE
   static Future<void> update(ChiPhi chiphi) async {
     if (chiphi.id == null) return;
 
@@ -48,12 +45,10 @@ class ChiPhiController {
         .eq('id', chiphi.id!);
   }
 
-  /// DELETE
   static Future<void> delete(int id) async {
     await supabase.from('chiphi').delete().eq('id', id);
   }
 
-  /// CHECK CATEGORY
   static Future<bool> hasExpenseByCategory(int categoryId) async {
     final data = await supabase
         .from('chiphi')

@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:dh52201610_luongthihuyentrang/models/loai.dart';
 import 'package:flutter/material.dart';
 
-class loaiDropdownItem extends StatelessWidget {
+class ItemLoaiThaXuong extends StatelessWidget {
   final Loai category;
 
-  const loaiDropdownItem({super.key, required this.category});
+  const ItemLoaiThaXuong({super.key, required this.category});
 
   Widget _buildIcon() {
     if (category.icon == null || category.icon!.isEmpty) {

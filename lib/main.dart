@@ -1,4 +1,4 @@
-import 'package:dh52201610_luongthihuyentrang/screens/page.dart';
+import 'package:dh52201610_luongthihuyentrang/pages/page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
